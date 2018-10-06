@@ -59,6 +59,9 @@ def dual_encoder_model(
             forget_bias=2.0,
             use_peepholes=True,
             state_is_tuple=True)
+        # Add dropout
+        cell_context = tf.nn.rnn_cell.DropoutWrapper(
+            cell_context, output_keep_prob=hparams.keep_rate)
 
         # Run context through the RNN
         context_encoded_outputs, context_encoded = tf.nn.dynamic_rnn(cell_context, context_embedded,
@@ -72,6 +75,9 @@ def dual_encoder_model(
             forget_bias=2.0,
             use_peepholes=True,
             state_is_tuple=True)
+        # Add dropout
+        cell_utterance = tf.nn.rnn_cell.DropoutWrapper(
+            cell_utterance, output_keep_prob=hparams.keep_rate)
         # Run all utterances through the RNN batch by batch
         # TODO: Needs to be parallelized
         all_utterances_encoded = []
